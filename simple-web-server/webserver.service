@@ -1,0 +1,14 @@
+[Unit]
+Description=Simple Bash Web Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/home/alireza/RTES2025_HW3/simple-web-server/simple-web-server.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
