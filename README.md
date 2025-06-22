@@ -59,11 +59,36 @@ Complete the provided `fifo-sender.sh` and `fifo-receiver.sh` scripts in the Git
 Complete the provided C++ programs `signal-receiver.cpp` and `signal-sender.cpp`:
 - **Receiver** 🖨️: Prints its **PID** on startup, waits for signals, and logs each received signal to a file.
 - **Sender** 📩: Accepts a PID and signal number as command-line arguments and sends the signal to the specified process.
-
 Answer the following:
 - ❓ What is the difference between the **SIGINT** and **SIGKILL** signals?
+    - SIGINT (Signal Interrupt): This is typically sent when you press Ctrl+C in a terminal. It politely asks the process to terminate. The process can catch and handle this signal—for example, to clean up resources before exiting or even to ignore it entirely.
+    - SIGKILL (Signal Kill): This is the heavy hammer. It immediately and unconditionally terminates the process. It can't be caught, blocked, or ignored. No cleanup, no questions asked. The process is gone as soon as the kernel delivers the signal.
 - ❓ Which signals can be caught or handled by a process?
+    - <code>SIGHUP (1) — Hangup detected on controlling terminal</code>
+    - <code>SIGINT (2) — Interrupt (Ctrl+C)</code>
+    - <code>SIGQUIT (3) — Quit from keyboard</code>
+    - <code>SIGILL (4) — Illegal Instruction</code>
+    - <code>SIGTRAP (5) — Trace/breakpoint trap</code>
+    - <code>SIGABRT (6) — Abort signal from abort()</code>
+    - <code>SIGBUS (7) — Bus error</code>
+    - <code>SIGFPE (8) — Floating point exception</code>
+    - <code>SIGUSR1 (10), SIGUSR2 (12) — User-defined signals</code>
+    - <code>SIGSEGV (11) — Segmentation fault (can be caught, though usually fatal)</code>
+    - <code>SIGPIPE (13) — Broken pipe</code>
+    - <code>SIGALRM (14) — Timer signal</code>
+    - <code>SIGTERM (15) — Termination request</code>
+    - <code>SIGCHLD (17) — Child stopped or terminated</code>
+    - <code>SIGCONT (18) — Continue if stopped</code>
+    - <code>SIGTSTP (20) — Stop typed at terminal (Ctrl+Z)</code>
+    - <code>SIGTTIN, SIGTTOU (21, 22) — Background I/O from terminal</code>
+    - <code>SIGXCPU, SIGXFSZ (24, 25) — CPU/file size limits exceeded</code>
+    - <code>SIGVTALRM, SIGPROF (26, 27) — Timers</code>
+    - <code>SIGWINCH (28) — Window size change</code>
+    - <code>SIGPOLL, SIGIO (29) — I/O now possible</code>
+    - <code>SIGSYS</code>
 - ❓ How many signals are defined in Linux?
+    - Standard signals: These are the traditional signals, numbered from 1 to 31. They include signals like SIGINT, SIGKILL, SIGTERM, and SIGSEGV.
+    - Real-time signals: These are newer and more flexible, introduced by POSIX. Linux supports 33 real-time signals, typically numbered from 32 to 64. However, some of these may be reserved internally by the system or libraries like glibc.
 
 #### 3. Shared Memory
 Complete the provided C++ programs `shm-writer.cpp` and `shm-reader.cpp`:
@@ -72,7 +97,24 @@ Complete the provided C++ programs `shm-writer.cpp` and `shm-reader.cpp`:
 
 Answer the following:
 - ❓ What are the key differences between FIFO and shared memory for IPC?
-
+    - **Communication Type**
+        - FIFO (Named Pipe): It’s stream-based—like a regular pipe—transferring data byte by byte.
+        - Shared Memory: It allows both processes to access a common memory region directly.
+    - **Speed**
+        - FIFO: Generally slower due to kernel buffering and the overhead of read/write system calls.
+        - Shared Memory: Much faster because memory is accessed directly without intermediate copying.
+    - **Synchronization**
+        - FIFO: Offers implicit synchronization since read/write operations are blocking by nature.
+        - Shared Memory: Needs explicit synchronization (like semaphores or mutexes) to coordinate access.
+    - **Persistence**
+        - FIFO: Exists as a special file in the filesystem (created with mkfifo or mknod).
+        - Shared Memory: Exists in memory only, and is removed when no longer attached or used.
+    - **Setup Complexity**
+        - FIFO: Easier to set up—just create the file and use open/read/write.
+        - Shared Memory: More complex—it involves allocating (shmget), attaching (shmat), and detaching (shmdt), often paired with synchronization.
+    - **Use Cases**
+        - FIFO: Best for sequential or simple data transfer (like logs or commands).
+        - Shared Memory: Ideal for high-throughput or real-time needs (like sensor data processing or large buffer sharing).
 ---
 
 ### 🌍 Basic Web Server
